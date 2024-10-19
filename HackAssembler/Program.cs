@@ -162,16 +162,10 @@ namespace HackAssembler
                     string dest = Code.Dest(s_parser.Dest);
                     string comp = Code.Comp(s_parser.Comp);
                     string jump = Code.Jump(s_parser.Jump);
-                    bool isValidDest = dest != String.Empty;
-                    bool isValidComp = comp != String.Empty;
-                    bool isValidJump = jump != String.Empty;
 
-                    if (isValidDest && isValidComp && isValidJump)
-                    {
-                        string[] parts = ["111", comp, dest, jump];
-                        string final = string.Concat(parts);
-                        s_binaryOutput.Add(final);
-                    }
+                    string[] parts = ["111", comp, dest, jump];
+                    string final = string.Concat(parts);
+                    s_binaryOutput.Add(final);
                 }
             }
 

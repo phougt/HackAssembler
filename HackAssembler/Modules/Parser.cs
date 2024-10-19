@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using HackAssembler.Enums;
+using HackAssembler.Models;
 
 namespace HackAssembler.Modules
 {
@@ -17,11 +18,89 @@ namespace HackAssembler.Modules
         private string _currentCommand = string.Empty;
         private StreamReader _reader;
         private uint _lineNumber = 1;
+        private HashSet<string> _validDest;
+        private HashSet<string> _validJump;
+        private HashSet<string> _validComp;
+
 
         public Parser(string filePath)
         {
             _reader = new StreamReader(filePath);
             HasMoreCommands = !_reader.EndOfStream;
+
+            _validDest = new HashSet<string>()
+            {
+                "",
+                "M",
+                "D",
+                "MD",
+                "DM",
+                "A",
+                "AM",
+                "MA",
+                "AD",
+                "DA",
+                "AMD",
+                "ADM",
+                "MAD",
+                "MDA",
+                "DMA",
+                "DAM"
+            };
+
+            _validJump = new HashSet<string>()
+            {
+                "",
+                "JGT",
+                "JEQ",
+                "JGE",
+                "JLT",
+                "JNE",
+                "JLE",
+                "JMP"
+            };
+
+            _validComp = new HashSet<string>()
+            {
+                "0",
+                "1",
+                "-1",
+                "D",
+                "A",
+                "!D",
+                "!A",
+                "-D",
+                "-A",
+                "D+1",
+                "1+D",
+                "A+1",
+                "1+A",
+                "D-1",
+                "A-1",
+                "D+A",
+                "A+D",
+                "D-A",
+                "A-D",
+                "D&A",
+                "A&D",
+                "D|A",
+                "A|D",
+                "M",
+                "!M",
+                "-M",
+                "M+1",
+                "1+M",
+                "M-1",
+                "D+M",
+                "M+D",
+                "D-M",
+                "M-D",
+                "D&M",
+                "M&D",
+                "D|M",
+                "M|D"
+            };
+
         }
 
         private void RemoveComment()
@@ -31,6 +110,41 @@ namespace HackAssembler.Modules
             {
                 _currentCommand = _currentCommand.Remove(commentStartIndex);
             }
+        }
+
+        private CCommand SplitCCommand()
+        {
+            string[] parts = _currentCommand.Split(';');
+            string compAndDestPart = string.Empty;
+            string jumpPart = string.Empty;
+
+            if (parts.Length >= 1)
+                compAndDestPart = parts[0];
+
+            if (parts.Length == 2)
+                jumpPart = parts[1];
+
+            string[] leftParts = compAndDestPart.Split('=');
+            string compPart = string.Empty;
+            string destPart = string.Empty;
+
+            if (leftParts.Length == 1)
+            {
+                compPart = leftParts[0];
+            }
+
+            if (leftParts.Length == 2)
+            {
+                destPart = leftParts[0];
+                compPart = leftParts[1];
+            }
+
+            CCommand final = new CCommand();
+            final.Dest = destPart;
+            final.Comp = compPart;
+            final.Jump = jumpPart;
+
+            return final;
         }
 
         private void RemoveWhiteSpaces()
@@ -144,6 +258,21 @@ namespace HackAssembler.Modules
             int equalIndex = _currentCommand.IndexOf('=');
             bool endWithEqual = _currentCommand.EndsWith('=');
 
+            CCommand command = SplitCCommand();
+
+            bool isValidDest = _validDest.Contains(command.Dest);
+            bool isValidComp = _validComp.Contains(command.Comp);
+            bool isValidJump = _validJump.Contains(command.Jump);
+
+            if (!isValidDest)
+                Console.Error.WriteLine($"Invalid Dest. Line: {_lineNumber}");
+
+            if (!isValidComp)
+                Console.Error.WriteLine($"Invalid Comp. Line: {_lineNumber}");
+
+            if (!isValidJump)
+                Console.Error.WriteLine($"Invalid Jump. Line: {_lineNumber}");
+
             if (hasMultiEqual && !LabelPass)
                 Console.Error.WriteLine($"Only one '=' is expected. Line: {_lineNumber}");
 
@@ -169,10 +298,12 @@ namespace HackAssembler.Modules
             if (startWithSemicolon && !LabelPass)
                 Console.Error.WriteLine($"Expression is expected before ';'. Line: {_lineNumber}");
 
+
             return (hasOnlyOneSemiColon && hasOnlyOneEqual && !(semiColonCount < equalIndex))
                 || (hasOnlyOneEqual && !hasSemiColon && !endWithEqual)
                 || (hasOnlyOneSemiColon && !hasEqual)
-                && (!startWithSemicolon);
+                && (!startWithSemicolon)
+                && (isValidComp && isValidDest && isValidJump);
         }
 
         public void Advance()
@@ -238,38 +369,14 @@ namespace HackAssembler.Modules
                 }
 
                 Type = InstructionType.C_COMMAND;
-                string[] parts = _currentCommand.Split(';');
-                string compAndDestPart = string.Empty;
-                string jumpPart = string.Empty;
 
-                if (parts.Length >= 1)
-                    compAndDestPart = parts[0];
+                CCommand command = SplitCCommand();
 
-                if (parts.Length == 2)
-                    jumpPart = parts[1];
-
-                string[] leftParts = compAndDestPart.Split('=');
-                string compPart = string.Empty;
-                string destPart = string.Empty;
-
-                if (leftParts.Length == 1)
-                {
-                    compPart = leftParts[0];
-                }
-
-                if (leftParts.Length == 2)
-                {
-                    destPart = leftParts[0];
-                    compPart = leftParts[1];
-                }
-
-                Dest = destPart;
-                Comp = compPart;
-                Jump = jumpPart;
-
+                Dest = command.Dest;
+                Comp = command.Comp;
+                Jump = command.Jump;
                 _lineNumber++;
                 IsValidCommand = true;
-                return;
             }
         }
 

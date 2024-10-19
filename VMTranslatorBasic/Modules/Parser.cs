@@ -13,6 +13,11 @@ namespace VMTranslatorBasic.Modules
         private StreamReader _reader;
         private uint _lineNumber = 1;
 
+        public Parser ()
+        {
+            
+        }
+
         public void Dispose()
         {
             _reader?.Dispose();
