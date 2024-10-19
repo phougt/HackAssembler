@@ -275,7 +275,7 @@ namespace HackAssembler.Modules
 
         public void Dispose()
         {
-            _reader.Dispose();
+            _reader?.Dispose();
         }
     }
 }
