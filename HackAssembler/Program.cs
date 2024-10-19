@@ -80,7 +80,7 @@ namespace HackAssembler
 
             s_parser.LabelPass = true;
 
-            while (s_parser.HasMoreCommands)
+            while (s_parser.HasMoreLines)
             {
                 s_parser.Advance();
 
@@ -116,7 +116,7 @@ namespace HackAssembler
             s_parser = new Parser(sourcePath);
             s_parser.LabelPass = false;
 
-            while (s_parser.HasMoreCommands)
+            while (s_parser.HasMoreLines)
             {
                 s_parser.Advance();
 

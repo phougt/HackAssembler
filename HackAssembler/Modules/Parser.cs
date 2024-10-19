@@ -9,7 +9,7 @@ namespace HackAssembler.Modules
         public InstructionType Type { get; private set; }
         public string Symbol { get; private set; } = string.Empty;
         public bool LabelPass { get; set; } = false;
-        public bool HasMoreCommands { get; private set; } = false;
+        public bool HasMoreLines { get; private set; } = false;
         public bool IsValidCommand { get; private set; } = false;
         public string Dest { get; private set; } = string.Empty;
         public string Comp { get; private set; } = string.Empty;
@@ -26,7 +26,7 @@ namespace HackAssembler.Modules
         public Parser(string filePath)
         {
             _reader = new StreamReader(filePath);
-            HasMoreCommands = !_reader.EndOfStream;
+            HasMoreLines = !_reader.EndOfStream;
 
             _validDest = new HashSet<string>()
             {
@@ -309,7 +309,7 @@ namespace HackAssembler.Modules
         public void Advance()
         {
             _currentCommand = _reader.ReadLine();
-            HasMoreCommands = !_reader.EndOfStream;
+            HasMoreLines = !_reader.EndOfStream;
 
             if (_currentCommand == null)
             {
