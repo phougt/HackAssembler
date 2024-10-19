@@ -123,6 +123,7 @@ namespace HackAssembler
                 if (!s_parser.IsValidCommand)
                 {
                     s_canGenerateBinary = false;
+                    continue;
                 }
 
                 InstructionType currentCommandType = s_parser.Type;
@@ -130,7 +131,7 @@ namespace HackAssembler
                 if (currentCommandType == InstructionType.NONE || currentCommandType == InstructionType.L_COMMAND)
                     continue;
 
-                if (currentCommandType == InstructionType.A_COMMAND && s_canGenerateBinary)
+                if (currentCommandType == InstructionType.A_COMMAND)
                 {
                     string symbol = s_parser.Symbol;
                     bool isNumber = symbol.All((c) => char.IsNumber(c));
@@ -156,7 +157,7 @@ namespace HackAssembler
                     }
                 }
 
-                if (currentCommandType == InstructionType.C_COMMAND && s_canGenerateBinary)
+                if (currentCommandType == InstructionType.C_COMMAND)
                 {
                     string dest = Code.Dest(s_parser.Dest);
                     string comp = Code.Comp(s_parser.Comp);
