@@ -198,10 +198,10 @@ namespace HackAssembler.Modules
                 }
             }
 
-            if (startWithAtSign && hasOneAtSign && !hasCloseParenthesis && !hasOpenParenthesis)
-                return true;
-            else
-                return false;
+            return startWithAtSign
+                && hasOneAtSign
+                && !hasCloseParenthesis
+                && !hasOpenParenthesis;
         }
 
         private bool ValidateLCommand()
