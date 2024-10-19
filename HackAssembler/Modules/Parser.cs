@@ -264,13 +264,13 @@ namespace HackAssembler.Modules
             bool isValidComp = _validComp.Contains(command.Comp);
             bool isValidJump = _validJump.Contains(command.Jump);
 
-            if (!isValidDest)
+            if (!isValidDest && !LabelPass)
                 Console.Error.WriteLine($"Invalid Dest. Line: {_lineNumber}");
 
-            if (!isValidComp)
+            if (!isValidComp && !LabelPass)
                 Console.Error.WriteLine($"Invalid Comp. Line: {_lineNumber}");
 
-            if (!isValidJump)
+            if (!isValidJump && !LabelPass)
                 Console.Error.WriteLine($"Invalid Jump. Line: {_lineNumber}");
 
             if (hasMultiEqual && !LabelPass)
