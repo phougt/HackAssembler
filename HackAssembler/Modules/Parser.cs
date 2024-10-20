@@ -198,10 +198,10 @@ namespace HackAssembler.Modules
                 }
             }
 
-            return startWithAtSign
-                && hasOneAtSign
-                && !hasCloseParenthesis
-                && !hasOpenParenthesis;
+            if (startWithAtSign && hasOneAtSign && !hasCloseParenthesis && !hasOpenParenthesis)
+                return true;
+            else
+                return false;
         }
 
         private bool ValidateLCommand()
@@ -308,13 +308,9 @@ namespace HackAssembler.Modules
 
         public void Advance()
         {
-            _currentCommand = _reader.ReadLine();
+            string? temp = _reader.ReadLine() ?? throw new EndOfStreamException();
+            _currentCommand = temp;
             HasMoreLines = !_reader.EndOfStream;
-
-            if (_currentCommand == null)
-            {
-                throw new EndOfStreamException();
-            }
 
             RemoveWhiteSpaces();
             RemoveComment();
