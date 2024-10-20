@@ -319,7 +319,6 @@ namespace HackAssembler.Modules
             {
                 Type = Enums.CommandType.NONE;
                 _lineNumber++;
-                IsValidCommand = true;
                 return;
             }
 
