@@ -6,7 +6,7 @@ namespace HackAssembler.Modules
 {
     public class Parser : IDisposable
     {
-        public InstructionType Type { get; private set; }
+        public Enums.CommandType Type { get; private set; }
         public string Symbol { get; private set; } = string.Empty;
         public bool LabelPass { get; set; } = false;
         public bool HasMoreLines { get; private set; } = false;
@@ -317,7 +317,7 @@ namespace HackAssembler.Modules
 
             if (_currentCommand == string.Empty)
             {
-                Type = InstructionType.NONE;
+                Type = Enums.CommandType.NONE;
                 _lineNumber++;
                 IsValidCommand = true;
                 return;
@@ -332,7 +332,7 @@ namespace HackAssembler.Modules
                     return;
                 }
 
-                Type = InstructionType.A_COMMAND;
+                Type = Enums.CommandType.A_COMMAND;
                 Symbol = _currentCommand.Remove(0, 1);
                 _lineNumber++;
                 IsValidCommand = true;
@@ -348,7 +348,7 @@ namespace HackAssembler.Modules
                     return;
                 }
 
-                Type = InstructionType.L_COMMAND;
+                Type = Enums.CommandType.L_COMMAND;
                 Symbol = new string(_currentCommand.Where((c) => { return (c != '(') && (c != ')'); }).ToArray());
                 _lineNumber++;
                 IsValidCommand = true;
@@ -364,7 +364,7 @@ namespace HackAssembler.Modules
                     return;
                 }
 
-                Type = InstructionType.C_COMMAND;
+                Type = Enums.CommandType.C_COMMAND;
 
                 CCommand command = SplitCCommand();
 

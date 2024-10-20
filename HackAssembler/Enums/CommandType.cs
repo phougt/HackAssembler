@@ -1,6 +1,6 @@
 ﻿namespace HackAssembler.Enums
 {
-    public enum InstructionType
+    public enum CommandType
     {
         NONE,
         A_COMMAND,

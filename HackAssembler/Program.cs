@@ -89,9 +89,9 @@ namespace HackAssembler
                     s_canGenerateBinary = false;
                 }
 
-                InstructionType currenCommandType = s_parser.Type;
+                CommandType currenCommandType = s_parser.Type;
 
-                if (currenCommandType == InstructionType.L_COMMAND && s_canGenerateBinary)
+                if (currenCommandType == CommandType.L_COMMAND && s_canGenerateBinary)
                 {
                     string symbol = s_parser.Symbol;
 
@@ -105,7 +105,7 @@ namespace HackAssembler
                         s_canGenerateBinary = false;
                     }
                 }
-                else if (currenCommandType == InstructionType.A_COMMAND || currenCommandType == InstructionType.C_COMMAND)
+                else if (currenCommandType == CommandType.A_COMMAND || currenCommandType == CommandType.C_COMMAND)
                 {
                     s_programCounter++;
                 }
@@ -126,12 +126,12 @@ namespace HackAssembler
                     continue;
                 }
 
-                InstructionType currentCommandType = s_parser.Type;
+                CommandType currentCommandType = s_parser.Type;
 
-                if (currentCommandType == InstructionType.NONE || currentCommandType == InstructionType.L_COMMAND)
+                if (currentCommandType == CommandType.NONE || currentCommandType == CommandType.L_COMMAND)
                     continue;
 
-                if (currentCommandType == InstructionType.A_COMMAND)
+                if (currentCommandType == CommandType.A_COMMAND)
                 {
                     string symbol = s_parser.Symbol;
                     bool isNumber = symbol.All((c) => char.IsNumber(c));
@@ -157,7 +157,7 @@ namespace HackAssembler
                     }
                 }
 
-                if (currentCommandType == InstructionType.C_COMMAND)
+                if (currentCommandType == CommandType.C_COMMAND)
                 {
                     string dest = Code.Dest(s_parser.Dest);
                     string comp = Code.Comp(s_parser.Comp);
